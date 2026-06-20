@@ -1,0 +1,14 @@
+# theme.toml — конфигурация темы Hugo "blog"
+
+name = "blog"
+license = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "Минималистичная тема для блога с акцентом на блоки кода: контент занимает 25% экрана на десктопе, блоки кода — 100% ширины с отличающимся фоном."
+homepage = "https://example.com/"
+tags = ["blog", "minimal", "code", "responsive"]
+features = ["responsive", "syntax-highlighting", "tags", "categories"]
+min_version = "0.112.0"
+
+[author]
+  name = "Hugo Blog Theme"
+  homepage = "https://example.com/"

@@ -1,0 +1,24 @@
+{{- /*
+  post-nav.html — ссылки на предыдущую/следующую запись.
+*/ -}}
+{{- if or .PrevInSection .NextInSection -}}
+<nav class="post-nav" aria-label="Навигация между записями">
+  {{- with .PrevInSection -}}
+    <a class="post-nav__link post-nav__link--prev" href="{{ .RelPermalink }}" rel="prev">
+      <span class="post-nav__label">&larr; Предыдущая</span>
+      <span class="post-nav__title">{{ .Title }}</span>
+    </a>
+  {{- else -}}
+    <span class="post-nav__link post-nav__link--placeholder"></span>
+  {{- end -}}
+
+  {{- with .NextInSection -}}
+    <a class="post-nav__link post-nav__link--next" href="{{ .RelPermalink }}" rel="next">
+      <span class="post-nav__label">Следующая &rarr;</span>
+      <span class="post-nav__title">{{ .Title }}</span>
+    </a>
+  {{- else -}}
+    <span class="post-nav__link post-nav__link--placeholder"></span>
+  {{- end -}}
+</nav>
+{{- end -}}

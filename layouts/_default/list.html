@@ -1,0 +1,44 @@
+{{- /*
+  list.html — общий список страниц (используется для секций, например /posts/).
+  Выводит ленту записей с краткими описаниями и постраничной навигацией.
+*/ -}}
+{{- define "main" -}}
+<section class="post-list-section">
+  <header class="post-list-section__head">
+    <h1 class="post-list-section__title">{{ .Title }}</h1>
+    {{- with .Content -}}
+      <div class="post-list-section__description">{{ . }}</div>
+    {{- end -}}
+  </header>
+
+  {{- $paginator := .Paginate .Pages -}}
+
+  {{- if eq $paginator.NumberOfElements 0 -}}
+    <p class="post-list-empty">В этом разделе пока нет записей.</p>
+  {{- else -}}
+    <ol class="post-list">
+      {{- range $paginator.Pages -}}
+        <li class="post-list__item">
+          <article class="post-card">
+            <header class="post-card__head">
+              <h2 class="post-card__title">
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </h2>
+              <p class="post-card__meta">
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                  {{- .Date | time.Format ":date_long" -}}
+                </time>
+              </p>
+            </header>
+            {{- with .Summary -}}
+              <div class="post-card__summary">{{ . }}</div>
+            {{- end -}}
+          </article>
+        </li>
+      {{- end -}}
+    </ol>
+
+    {{- partial "pagination.html" $paginator -}}
+  {{- end -}}
+</section>
+{{- end -}}

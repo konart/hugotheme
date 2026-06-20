@@ -1,0 +1,38 @@
+{{- /*
+  baseof.html — корневой шаблон темы.
+  Тема концептуально состоит из четырёх блоков:
+    1) header   — шапка сайта (название + слоган)
+    2) nav      — меню навигации
+    3) main     — основной блок с контентом
+    4) footer   — футер
+  Все страницы наследуются от этого шаблона.
+*/ -}}
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default .Site.Language.Lang | default "ru" }}">
+{{- partial "head.html" . -}}
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  {{/* Блок 1: Header (шапка сайта) */}}
+  {{- partial "header.html" . -}}
+
+  {{/* Блок 2: Навигационное меню */}}
+  {{- partial "nav.html" . -}}
+
+  {{/* Блок 3: Основной контент страницы */}}
+  <main id="main" class="content" role="main">
+    {{- block "main" . }}{{- end -}}
+  </main>
+
+  {{/* Блок 4: Футер */}}
+  {{- partial "footer.html" . -}}
+
+  {{- $js := resources.Get "js/main.js" | default (resources.Get "/js/main.js") -}}
+  {{- with $js -}}
+    <script src="{{ .RelPermalink }}" defer></script>
+  {{- else -}}
+    {{- $jsStatic := "js/main.js" | relURL -}}
+    <script src="{{ $jsStatic }}" defer></script>
+  {{- end -}}
+</body>
+</html>

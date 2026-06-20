@@ -1,0 +1,31 @@
+{{- /*
+  pagination.html — навигация по страницам списка постов.
+  Используется с .Paginator из контекста list/index шаблонов.
+*/ -}}
+{{- if gt .TotalPages 1 -}}
+<nav class="pagination" aria-label="Постраничная навигация">
+  <ul class="pagination__list">
+    {{- if .HasPrev -}}
+      <li class="pagination__item">
+        <a href="{{ .Prev.URL }}" rel="prev" class="pagination__link">&larr; Назад</a>
+      </li>
+    {{- end -}}
+
+    {{- range .Pagers -}}
+      <li class="pagination__item">
+        {{- if eq .PageNumber $.PageNumber -}}
+          <span class="pagination__current" aria-current="page">{{ .PageNumber }}</span>
+        {{- else -}}
+          <a href="{{ .URL }}" class="pagination__link">{{ .PageNumber }}</a>
+        {{- end -}}
+      </li>
+    {{- end -}}
+
+    {{- if .HasNext -}}
+      <li class="pagination__item">
+        <a href="{{ .Next.URL }}" rel="next" class="pagination__link">Вперёд &rarr;</a>
+      </li>
+    {{- end -}}
+  </ul>
+</nav>
+{{- end -}}

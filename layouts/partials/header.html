@@ -1,0 +1,16 @@
+{{- /*
+  header.html — Блок 1: шапка сайта.
+  Содержит название сайта и слоган.
+*/ -}}
+<header class="site-header">
+  <div class="site-header__inner">
+    <p class="site-header__brand">
+      <a href="{{ .Site.Home.RelPermalink }}" rel="home">
+        {{- .Site.Title -}}
+      </a>
+    </p>
+    {{- with .Site.Params.subtitle -}}
+      <p class="site-header__tagline">{{ . }}</p>
+    {{- end -}}
+  </div>
+</header>

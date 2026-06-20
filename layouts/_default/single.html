@@ -1,0 +1,64 @@
+{{- /*
+  single.html — страница отдельной записи в блоге.
+  В контент здесь применяются хуки Hugo Render Hooks и шорткоды,
+  в частности работает подсветка синтаксиса через Chroma.
+  Внешний вид блоков кода (полная ширина + отличный фон) управляется
+  классом .post-content pre в style.css.
+*/ -}}
+{{- define "main" -}}
+<article class="post" itemscope itemtype="https://schema.org/BlogPosting">
+  <header class="post__head">
+    <h1 class="post__title" itemprop="name headline">{{ .Title }}</h1>
+
+    <p class="post__meta">
+      {{- with .Date -}}
+        <time class="post__date"
+              datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}"
+              itemprop="datePublished">
+          {{- . | time.Format ":date_long" -}}
+        </time>
+      {{- end -}}
+      {{- with .ReadingTime -}}
+        <span class="post__reading">&middot; {{ . }} мин чтения</span>
+      {{- end -}}
+      {{- with .WordCount -}}
+        <span class="post__words">&middot; {{ . }} слов</span>
+      {{- end -}}
+    </p>
+
+    {{- with .Params.categories -}}
+      <p class="post__categories">
+        {{- range . -}}
+          <a href="{{ "/categories/" | relURL }}{{ . | urlize }}/" class="post__chip post__chip--category">{{ . }}</a>
+        {{- end -}}
+      </p>
+    {{- end -}}
+
+    {{- with .Params.tags -}}
+      <p class="post__tags">
+        {{- range . -}}
+          <a href="{{ "/tags/" | relURL }}{{ . | urlize }}/" class="post__chip post__chip--tag">#{{ . }}</a>
+        {{- end -}}
+      </p>
+    {{- end -}}
+  </header>
+
+  {{- if .Draft -}}
+    <p class="post__draft-notice">Черновик</p>
+  {{- end -}}
+
+  <div class="post-content" itemprop="articleBody">
+    {{- .Content -}}
+  </div>
+
+  <footer class="post__footer">
+    {{- with .Site.Params.author -}}
+      <p class="post__author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <span itemprop="name">{{ . }}</span>
+      </p>
+    {{- end -}}
+
+    {{- partial "post-nav.html" . -}}
+  </footer>
+</article>
+{{- end -}}

@@ -1,0 +1,40 @@
+{{- /*
+  nav.html — Блок 2: меню навигации.
+  Использует параметр `main` из секции `menu` конфигурации сайта.
+  Дополнительно выводит ссылки на страницы тэгов и категорий.
+*/ -}}
+<nav class="site-nav" aria-label="Главное меню">
+  <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav-list">
+    <span class="site-nav__toggle-icon" aria-hidden="true"></span>
+    <span class="site-nav__toggle-label">Меню</span>
+  </button>
+  <ul id="site-nav-list" class="site-nav__list" data-open="false">
+    {{- $home := .Site.Home -}}
+    <li class="site-nav__item">
+      <a href="{{ $home.RelPermalink }}"
+         class="site-nav__link{{ if $.IsHome }} site-nav__link--active{{ end }}">
+        Главная
+      </a>
+    </li>
+
+    {{- range .Site.Menus.main -}}
+      <li class="site-nav__item">
+        <a href="{{ .URL }}" class="site-nav__link"{{ if $.IsMenuCurrent "main" . }} aria-current="page"{{ end }}>
+          {{- .Pre -}}{{- .Name -}}
+        </a>
+      </li>
+    {{- end -}}
+
+    {{- /* Автоматические ссылки на таксономии тэгов и категорий, если они существуют */ -}}
+    {{- with .Site.Taxonomies.tags -}}
+      <li class="site-nav__item">
+        <a href="{{ "/tags/" | relURL }}" class="site-nav__link">Тэги</a>
+      </li>
+    {{- end -}}
+    {{- with .Site.Taxonomies.categories -}}
+      <li class="site-nav__item">
+        <a href="{{ "/categories/" | relURL }}" class="site-nav__link">Категории</a>
+      </li>
+    {{- end -}}
+  </ul>
+</nav>

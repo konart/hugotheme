@@ -1,0 +1,19 @@
+{{- /*
+  taxonomy.html — страница списка терминов таксономии (например, /tags/ или /categories/).
+*/ -}}
+{{- define "main" -}}
+<section class="taxonomy-list">
+  <h1 class="taxonomy-list__title">{{ .Title }}</h1>
+
+  <ul class="taxonomy-list__items">
+    {{- range .Data.Terms.ByCount -}}
+      <li class="taxonomy-term">
+        <a href="{{ .Page.RelPermalink }}" class="taxonomy-term__link">
+          {{ .Page.Title }}
+          <span class="taxonomy-term__count">{{ .Count }}</span>
+        </a>
+      </li>
+    {{- end -}}
+  </ul>
+</section>
+{{- end -}}

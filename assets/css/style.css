@@ -1,0 +1,1041 @@
+/* =========================================================================
+   blog theme — style.css
+   -------------------------------------------------------------------------
+   Структура страницы (4 блока):
+     1) .site-header    — шапка сайта
+     2) .site-nav       — меню навигации
+     3) .content (main) — основной блок контента
+     4) .site-footer    — футер
+
+   Ключевая особенность:
+     - .content занимает 25% ширины viewport на десктопе
+       и до 95% — на мобильных устройствах.
+     - .post-content pre (блоки кода) всегда занимают 100% ширины viewport
+       и имеют отличный от основного фона цвет (тёмная палитра).
+   ========================================================================= */
+
+/* ----- 0. Переменные темы --------------------------------------------- */
+:root {
+  /* Типографика */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter",
+    "Helvetica Neue", "Noto Sans", "Roboto", system-ui, sans-serif;
+  --font-serif: "Iowan Old Style", "Apple Garamond", "Noto Serif",
+    "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo",
+    "Consolas", "Liberation Mono", monospace;
+
+  /* Светлая палитра (основной фон) */
+  --bg-page: #fafaf7;
+  --bg-content: #ffffff;
+  --bg-header: #ffffff;
+  --bg-nav: #f3f2ed;
+  --bg-footer: #2a2a2a;
+  --bg-chip: #efece4;
+
+  /* Текст */
+  --text-primary: #1c1c1c;
+  --text-secondary: #525252;
+  --text-muted: #8a8a8a;
+  --text-on-dark: #f5f5f5;
+
+  /* Акценты */
+  --accent: #b5421f;
+  --accent-hover: #8c3417;
+  --link: #1f5fa8;
+  --link-hover: #14457c;
+  --border: #e3e1da;
+
+  /* Тёмная палитра для блоков кода (отличающийся фон) */
+  --code-bg: #1e1e2e;
+  --code-fg: #cdd6f4;
+  --code-border: #313244;
+  --code-gutter: #45475a;
+
+  /* Размеры */
+  --content-max-width: 720px;
+  --header-height: 4.5rem;
+  --nav-height: 3rem;
+  --radius: 6px;
+  --radius-lg: 12px;
+
+  /* Прочее */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --transition: 180ms ease;
+}
+
+/* ----- 1. Сброс -------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Предотвращаем горизонтальный скролл, вызванный блоками кода 100vw */
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+picture,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover,
+a:focus-visible {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+ul,
+ol {
+  padding-left: 1.25rem;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  padding: 0.5rem 1rem;
+  background: var(--bg-content);
+  color: var(--text-primary);
+  z-index: 999;
+  border-radius: 0 0 var(--radius) 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* =========================================================================
+   Блок 1. Шапка сайта (.site-header)
+   ========================================================================= */
+.site-header {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 1rem 1.25rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.site-header__brand {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.site-header__brand a {
+  color: var(--text-primary);
+}
+.site-header__brand a:hover {
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.site-header__tagline {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* =========================================================================
+   Блок 2. Навигационное меню (.site-nav)
+   ========================================================================= */
+.site-nav {
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.site-nav__list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-nav__item {
+  margin: 0;
+}
+
+.site-nav__link {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.site-nav__link:hover,
+.site-nav__link:focus-visible {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.site-nav__link--active,
+.site-nav__link[aria-current="page"] {
+  background: var(--bg-content);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Кнопка-бургер — скрыта на десктопе */
+.site-nav__toggle {
+  display: none;
+}
+
+/* =========================================================================
+   Блок 3. Контент (.content / main)
+   -------------------------------------------------------------------------
+   КЛЮЧЕВОЕ ТРЕБОВАНИЕ: контент занимает 25% ширины экрана на десктопе,
+   до 95% — на мобильных устройствах.
+   ========================================================================= */
+.content {
+  flex: 1 1 auto;
+  width: 25vw;                /* 25% ширины viewport — десктоп */
+  max-width: var(--content-max-width);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+  background: var(--bg-content);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================================================================
+   Типографика основного контента
+   ========================================================================= */
+.post-list-section__title,
+.taxonomy-index__title,
+.post__title,
+.not-found__title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.post-list-section__title {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  margin: 0 0 0.5rem;
+}
+
+.post-list-section__intro {
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem;
+}
+
+.post-list-section__breadcrumb {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+.post-list-section__description {
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem;
+}
+
+/* --- Список постов на главной/секциях --- */
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list__item {
+  padding: 0;
+  margin: 0 0 1.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.post-list__item:last-child {
+  border-bottom: none;
+}
+
+.post-card__head {
+  margin-bottom: 0.5rem;
+}
+
+.post-card__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.post-card__title a {
+  color: var(--text-primary);
+}
+.post-card__title a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.post-card__meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.post-card__summary {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+.post-card__summary p {
+  margin: 0 0 0.5rem;
+}
+
+.post-card__footer {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.post-card__tags-label {
+  margin-right: 0.35rem;
+}
+
+.post-card__taglist {
+  display: inline;
+  list-style: none;
+  padding: 0;
+  margin: 0 0.75rem 0 0;
+}
+.post-card__taglist li {
+  display: inline;
+}
+.post-card__taglist li::after {
+  content: ", ";
+  color: var(--text-muted);
+}
+.post-card__taglist li:last-child::after {
+  content: "";
+}
+
+.post-list-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+/* --- Страница одного поста --- */
+.post__head {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.post__title {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin: 0 0 0.5rem;
+}
+
+.post__meta {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.post__draft-notice {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  margin: 0 0 1rem;
+}
+
+.post__categories,
+.post__tags {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+}
+
+.post__chip {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  margin: 0 0.25rem 0.25rem 0;
+  border-radius: 999px;
+  background: var(--bg-chip);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.post__chip:hover {
+  background: var(--accent);
+  color: var(--text-on-dark);
+  text-decoration: none;
+}
+.post__chip--tag::before {
+  content: "#";
+  opacity: 0.7;
+}
+
+/* =========================================================================
+   .post-content — типографика тела записи.
+   Здесь же переопределяется поведение блоков кода (см. ниже).
+   ========================================================================= */
+.post-content {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.post-content > *:first-child {
+  margin-top: 0;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 2rem 0 0.75rem;
+  color: var(--text-primary);
+}
+.post-content h1 { font-size: 1.8rem; }
+.post-content h2 {
+  font-size: 1.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+.post-content h3 { font-size: 1.25rem; }
+.post-content h4 { font-size: 1.1rem; }
+.post-content h5,
+.post-content h6 { font-size: 1rem; }
+
+.post-content p {
+  margin: 0 0 1.15rem;
+}
+
+.post-content a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.post-content ul,
+.post-content ol {
+  margin: 0 0 1.15rem;
+  padding-left: 1.5rem;
+}
+.post-content li {
+  margin: 0.25rem 0;
+}
+
+.post-content blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--accent);
+  background: var(--bg-chip);
+  color: var(--text-secondary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.post-content blockquote p {
+  margin: 0.25rem 0;
+}
+
+.post-content img {
+  margin: 1.5rem auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.post-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+.post-content th,
+.post-content td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.post-content thead th {
+  background: var(--bg-chip);
+  font-weight: 600;
+}
+
+/* =========================================================================
+   БЛОКИ КОДА — ключевая особенность темы
+   -------------------------------------------------------------------------
+   Блок кода всегда занимает 100% ширины viewport и имеет отличный фон
+   (тёмная палитра), независимо от ширины контейнера контента (25% или 95%).
+
+   Техника: width:100vw + отрицательные margin-left/right, рассчитанные
+   через calc(50% - 50vw). Эта формула работает для любой ширины родителя,
+   потому что 50% — это половина ширины самого родителя, а 50vw — половина
+   viewport. Их разница даёт нужное смещение, чтобы выровнять блок кода
+   по краям экрана.
+   ========================================================================= */
+.post-content pre,
+.post-content .highlight {
+  /* Полная ширина viewport */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* Отступы сверху/снизу обычные, слева/справа — с учётом выхода за контейнер */
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.1rem 1.25rem 1.1rem calc(50vw - 50% + 1.25rem);
+  padding-right: calc(50vw - 50% + 1.25rem);
+
+  /* Отличающийся фон (тёмный) */
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border-top: 1px solid var(--code-border);
+  border-bottom: 1px solid var(--code-border);
+
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre;
+  tab-size: 2;
+  -moz-tab-size: 2;
+
+  box-shadow: var(--shadow-md);
+}
+
+/* Hugo Chroma оборачивает <pre> в <div class="highlight">. Унифицируем стили. */
+.post-content .highlight pre {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* Текст внутри блоков кода */
+.post-content pre code,
+.post-content .highlight code {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  white-space: inherit;
+}
+
+/* Inline code (внутри абзацев) — отдельная стилизация, не выходит за контейнер */
+.post-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--bg-chip);
+  color: var(--accent);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* Если у блока кода есть data-lang (Chroma), показываем метку языка */
+.post-content .highlight[data-lang]::before,
+.post-content pre[data-lang]::before {
+  content: attr(data-lang);
+  display: block;
+  font-family: var(--font-mans);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--code-gutter);
+  margin-bottom: 0.5rem;
+  opacity: 0.85;
+}
+
+/* Скроллбар внутри блока кода */
+.post-content pre::-webkit-scrollbar,
+.post-content .highlight::-webkit-scrollbar {
+  height: 8px;
+}
+.post-content pre::-webkit-scrollbar-track,
+.post-content .highlight::-webkit-scrollbar-track {
+  background: transparent;
+}
+.post-content pre::-webkit-scrollbar-thumb,
+.post-content .highlight::-webkit-scrollbar-thumb {
+  background: var(--code-gutter);
+  border-radius: 4px;
+}
+.post-content pre::-webkit-scrollbar-thumb:hover,
+.post-content .highlight::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* --- Навигация между постами --- */
+.post__footer {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.post__author {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.post-nav__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-chip);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  transition: background var(--transition);
+}
+.post-nav__link:hover {
+  background: var(--border);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.post-nav__link--next {
+  text-align: right;
+}
+.post-nav__link--placeholder {
+  visibility: hidden;
+}
+.post-nav__label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.post-nav__title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* =========================================================================
+   Индекс таксономии (список тэгов / категорий)
+   ========================================================================= */
+.taxonomy-index__head {
+  margin-bottom: 1.5rem;
+}
+.taxonomy-index__title {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  margin: 0 0 0.5rem;
+}
+.taxonomy-index__hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+.taxonomy-index__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+}
+.taxonomy-index__item {
+  margin: 0;
+}
+.taxonomy-index__link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  background: var(--bg-chip);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+.taxonomy-index__link:hover {
+  background: var(--accent);
+  color: var(--text-on-dark);
+  text-decoration: none;
+}
+.taxonomy-index__count {
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+.taxonomy-index__link:hover .taxonomy-index__count {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-on-dark);
+}
+
+/* =========================================================================
+   Постраничная навигация
+   ========================================================================= */
+.pagination {
+  margin-top: 2rem;
+}
+.pagination__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.pagination__link,
+.pagination__current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-content);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.pagination__link:hover {
+  background: var(--bg-chip);
+  color: var(--text-primary);
+  text-decoration: none;
+  border-color: var(--accent);
+}
+.pagination__current {
+  background: var(--accent);
+  color: var(--text-on-dark);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* =========================================================================
+   Блок 4. Футер (.site-footer)
+   ========================================================================= */
+.site-footer {
+  background: var(--bg-footer);
+  color: var(--text-on-dark);
+  padding: 1.75rem 1rem;
+  margin-top: auto;
+}
+.site-footer__inner {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+.site-footer__copy {
+  margin: 0;
+  font-size: 0.9rem;
+}
+.site-footer__links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.site-footer__link {
+  color: var(--text-on-dark);
+  opacity: 0.85;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-footer__link:hover {
+  opacity: 1;
+  color: var(--text-on-dark);
+}
+.site-footer__powered {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+.site-footer__powered a {
+  color: var(--text-on-dark);
+  text-decoration: underline;
+}
+
+/* =========================================================================
+   Страница 404
+   ========================================================================= */
+.not-found {
+  text-align: center;
+  padding: 3rem 0;
+}
+.not-found__code {
+  font-family: var(--font-mono);
+  font-size: clamp(4rem, 12vw, 7rem);
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+  line-height: 1;
+}
+.not-found__title {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem;
+}
+.not-found__text {
+  color: var(--text-secondary);
+  margin: 0 auto 1.5rem;
+  max-width: 30rem;
+}
+.not-found__link {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent);
+  color: var(--text-on-dark);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+.not-found__link:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-dark);
+  text-decoration: none;
+}
+
+/* =========================================================================
+   АДАПТИВНОСТЬ
+   -------------------------------------------------------------------------
+   На мобильных устройствах контент занимает до 95% ширины экрана.
+   Блоки кода остаются на 100% ширины viewport (см. выше).
+   ========================================================================= */
+
+/* Планшеты и узкие десктопы */
+@media (max-width: 1024px) {
+  .content {
+    width: 60vw;
+    padding: 2rem 1rem 3rem;
+  }
+}
+
+/* Планшеты в портретной ориентации */
+@media (max-width: 768px) {
+  .content {
+    width: 90vw;
+    padding: 1.75rem 0.75rem 2.5rem;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* На мобильных показываем бургер-меню */
+  .site-nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin: 0.5rem auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .site-nav__toggle-icon,
+  .site-nav__toggle-icon::before,
+  .site-nav__toggle-icon::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    position: relative;
+    transition: transform var(--transition);
+  }
+  .site-nav__toggle-icon::before,
+  .site-nav__toggle-icon::after {
+    content: "";
+    position: absolute;
+  }
+  .site-nav__toggle-icon::before { top: -6px; }
+  .site-nav__toggle-icon::after  { top: 6px; }
+
+  .site-nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition), padding var(--transition);
+  }
+  .site-nav__list[data-open="true"] {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .site-nav__link {
+    display: block;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+  .post-nav__link--next {
+    text-align: left;
+  }
+}
+
+/* Мобильные телефоны */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+  }
+
+  .content {
+    /* до 95% ширины экрана */
+    width: 95vw;
+    padding: 1.5rem 0.5rem 2rem;
+  }
+
+  .site-header {
+    padding: 1rem 0.75rem;
+  }
+
+  .site-header__brand {
+    font-size: 1.4rem;
+  }
+
+  .post-content {
+    font-size: 1rem;
+  }
+
+  .post-content pre,
+  .post-content .highlight {
+    font-size: 0.85rem;
+    padding: 1rem 0.75rem 1rem calc(50vw - 50% + 0.75rem);
+    padding-right: calc(50vw - 50% + 0.75rem);
+  }
+}
+
+/* Очень узкие экраны */
+@media (max-width: 360px) {
+  .content {
+    width: 95vw;
+    padding: 1.25rem 0.35rem 1.75rem;
+  }
+}
+
+/* =========================================================================
+   Доступность: респект пользовательских настроек
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Печать */
+@media print {
+  .site-nav,
+  .site-footer,
+  .post-nav,
+  .pagination,
+  .skip-link {
+    display: none !important;
+  }
+  .content {
+    width: 100%;
+    max-width: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  .post-content pre,
+  .post-content .highlight {
+    width: 100%;
+    max-width: 100%;
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background: #f5f5f5 !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+}

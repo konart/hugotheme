@@ -1,0 +1,15 @@
+{{- /*
+  404.html — страница "Не найдено".
+*/ -}}
+{{- define "main" -}}
+<section class="not-found">
+  <p class="not-found__code">404</p>
+  <h1 class="not-found__title">Страница не найдена</h1>
+  <p class="not-found__text">
+    Похоже, такой страницы не существует. Попробуйте вернуться на главную или воспользоваться меню навигации.
+  </p>
+  <p class="not-found__actions">
+    <a href="{{ .Site.Home.RelPermalink }}" class="not-found__link">На главную &rarr;</a>
+  </p>
+</section>
+{{- end -}}
